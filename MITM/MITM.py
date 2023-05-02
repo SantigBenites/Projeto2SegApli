@@ -1,6 +1,7 @@
 import sys, socket, threading, os
 from utils import *
 from MITMConnection import *
+from MITMThreads import *
 
 def main(argv):
     
@@ -12,6 +13,8 @@ def main(argv):
     serverPort      = argv[argv.index("-q")+1] if "-p" in argv else 3000
     try:
 
+        threadsStarted = False  
+
         clientSocket = createSocket(port=mitmPort)
         print(f"MITM started in port {mitmPort}")
 
@@ -21,18 +24,27 @@ def main(argv):
         bankSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         bankSocket.connect((serverIpAddress, serverPort))
 
-        while True:
-            
-            handShake(conn,bankSocket)
-            
-            clientMessage = clientReceive(conn)
-            bankSend(bankSocket,clientMessage)
+        lock = threading.Lock()
+        forwardQueue = []
+        backQueue = []
 
-            bankMessage = bankReceive(bankSocket)
-            clientSend(conn,bankMessage)
+        # ClientThread
+        clientThread = threading.Thread(target=ClientThread, args=(lock,forwardQueue,backQueue,conn))
+        clientThread.start()
+
+        # BankThread
+        bankThread = threading.Thread(target=BankThread, args=(lock,forwardQueue,backQueue,bankSocket))
+        bankThread.start()
+
+        print("Started working")
+
 
     except KeyboardInterrupt:
         print("Ended Properly\n")
+
+        if threadsStarted:
+            clientThread.join()
+            bankThread.join()
 
         dir = f"{os.getcwd()}/Grupo1/Executables"
         jarFiles = ["Bank.jar","MBeC.jar","Store.jar"]
