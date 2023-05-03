@@ -20,21 +20,23 @@ def main(argv):
 
         clientSocket.listen()
         conn, addr = clientSocket.accept()
+        conn.setblocking(0)
 
         bankSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         bankSocket.connect((serverIpAddress, serverPort))
 
-        lock = threading.Lock()
+        #lock = threading.Lock()
         forwardQueue = []
         backQueue = []
 
         # ClientThread
-        clientThread = threading.Thread(target=ClientThread, args=(lock,forwardQueue,backQueue,conn))
+        clientThread = threading.Thread(target=ClientThread, args=(forwardQueue,backQueue,conn))
         clientThread.start()
 
         # BankThread
-        bankThread = threading.Thread(target=BankThread, args=(lock,forwardQueue,backQueue,bankSocket))
+        bankThread = threading.Thread(target=BankThread, args=(forwardQueue,backQueue,bankSocket))
         bankThread.start()
+            
 
         print("Started working")
 
@@ -42,9 +44,9 @@ def main(argv):
     except KeyboardInterrupt:
         print("Ended Properly\n")
 
-        if threadsStarted:
-            clientThread.join()
-            bankThread.join()
+        #if threadsStarted:
+        #    clientThread.join()
+        #    bankThread.join()
 
         dir = f"{os.getcwd()}/Grupo1/Executables"
         jarFiles = ["Bank.jar","MBeC.jar","Store.jar"]

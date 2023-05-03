@@ -1,39 +1,41 @@
-import threading, time
 from MITMConnection import *
 
-def BankThread(lock:threading.Lock,forwardQueue:list[str],backQueue:list[str],BankSocket):
+def BankThread(forwardQueue:list[str],backQueue:list[str],BankSocket):
 
+    BankSocket.setblocking(0)
     while True:
 
-        with lock:
+        if len(forwardQueue) != 0:
             print("Bank send")
-            if len(forwardQueue) != 0:
-                message = forwardQueue.pop()
-                bankSend(BankSocket,message)
-        
-        with lock:
-            print("Bank receive")
+            message = forwardQueue.pop()
+            bankSend(BankSocket,message)
+    
+        try:
             responseMessage = bankReceive(BankSocket)
-            backQueue.append(responseMessage)
+            if len(responseMessage)!= 0: 
+                backQueue.append(responseMessage)
+                print(f"Bank receive")
+        except Exception:
+            continue
 
 
 
-def ClientThread(lock:threading.Lock,forwardQueue:list[str],backQueue:list[str],ClientSocket):
+def ClientThread(forwardQueue:list[str],backQueue:list[str],ClientSocket):
 
     while True:
 
-        with lock:
+        if len(backQueue) != 0:
+            responseMessage = backQueue.pop()
+            print(f"Client send")
+            clientSend(ClientSocket,responseMessage)
+
+        try:
             message = clientReceive(ClientSocket)
-            print(f"Client receive {message}")
-            forwardQueue.append(message)
-
-        time.sleep(1)
-
-        with lock:
-            if len(backQueue) != 0:
-                responseMessage = backQueue.pop(responseMessage)
-                print("Client send {responseMessage}")
-                clientSend(ClientSocket,responseMessage)
+            if len(message)!= 0: 
+                forwardQueue.append(message)
+                print(f"Client receive")
+        except Exception:
+            continue
     
 
 
