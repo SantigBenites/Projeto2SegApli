@@ -1,1 +1,5 @@
 MITM/__pycache__/
+
+Grupo1/Executables/
+
+!Grupo1/Executables/*.jar
