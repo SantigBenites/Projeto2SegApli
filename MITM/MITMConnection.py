@@ -9,19 +9,16 @@ def createSocket(host="127.0.0.1",port=4000):
     return s
 
 def clientReceive(conn:socket.socket):
-
-    packet = conn.recv(5000)
-    return packet
+    return conn.recv(5000)
 
 def clientSend(conn:socket.socket, message:str):
     conn.sendall(message)
+    return conn
 
 def bankReceive(s:socket.socket):
-
     return s.recv(5000)
 
 def bankSend(s:socket.socket, message:str):
-    
     s.sendall(message)
     return s
 
