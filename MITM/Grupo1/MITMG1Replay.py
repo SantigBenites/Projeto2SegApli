@@ -61,6 +61,11 @@ def main(argv):
         bankSocket.connect((serverIpAddress, serverPort))
 
         replay(bankSocket,traceList)
+
+        #call(["python3", "MITM/clearFiles.py"])
+        #bankSocket.close()
+        #clientSocket.close()
+
   
         
 

