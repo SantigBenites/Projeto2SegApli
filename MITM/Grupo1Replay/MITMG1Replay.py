@@ -7,7 +7,7 @@ sys.path.append(parent)
 from subprocess import *
 from MITMConnection import *
 from utils import *
-from Grupo1.MITMFuncs import *
+from Grupo1Replay.MITMFuncs import *
 
 def main(argv):
 
