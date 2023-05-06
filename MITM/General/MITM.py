@@ -1,4 +1,9 @@
 import sys, socket, threading, os, queue
+# directory reach
+current = os.path.dirname(os.path.realpath(__file__))
+# setting path
+parent = os.path.dirname(current)
+sys.path.append(parent)
 from utils import *
 from MITMConnection import *
 from MITMThreads import *
@@ -8,9 +13,9 @@ def main(argv):
     argv = stringToArgs("".join(argv))
 
     # Terminal line inputs
-    mitmPort        = argv[argv.index("-p")+1] if "-p" in argv else 4000
+    mitmPort        = argv[argv.index("-p")+1] if "-p" in argv else 5000
     serverIpAddress = argv[argv.index("-s")+1] if "-i" in argv else "127.0.0.1"
-    serverPort      = argv[argv.index("-q")+1] if "-p" in argv else 3000
+    serverPort      = argv[argv.index("-q")+1] if "-p" in argv else 6000
     try:
 
         threadsStarted = []  
