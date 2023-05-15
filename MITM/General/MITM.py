@@ -13,9 +13,9 @@ def main(argv):
     argv = stringToArgs("".join(argv))
 
     # Terminal line inputs
-    mitmPort        = argv[argv.index("-p")+1] if "-p" in argv else 5000
+    mitmPort        = argv[argv.index("-p")+1] if "-p" in argv else 4000
     serverIpAddress = argv[argv.index("-s")+1] if "-i" in argv else "127.0.0.1"
-    serverPort      = argv[argv.index("-q")+1] if "-p" in argv else 6000
+    serverPort      = argv[argv.index("-q")+1] if "-p" in argv else 3000
     try:
 
         threadsStarted = []  

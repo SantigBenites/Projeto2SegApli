@@ -8,7 +8,7 @@ def BankThread(forwardQueue:queue.Queue(),backQueue:queue.Queue(),BankSocket:soc
 
         if not forwardQueue.empty():
             message = forwardQueue.get()
-            print(f"MITM -> Bank {message}")
+            #print(f"MITM -> Bank {message[:10]}")
             bankSend(BankSocket,message)
     
         try:
@@ -16,7 +16,7 @@ def BankThread(forwardQueue:queue.Queue(),backQueue:queue.Queue(),BankSocket:soc
             if len(responseMessage): 
                 #backQueue.clear()
                 backQueue.put(responseMessage)
-                print(f"Bank -> MITM {responseMessage}")
+                #print(f"Bank -> MITM {responseMessage[:10]}")
         except Exception:
             continue
 
@@ -28,8 +28,8 @@ def ClientThread(forwardQueue:queue.Queue(),backQueue:queue.Queue(),ClientSocket
 
         if not backQueue.empty():
             responseMessage = backQueue.get()
-            #print(f"MITM -> Client {responseMessage[:10]} and time {time.time() - start_time}")
-            print(f"MITM -> Client {responseMessage}")
+            print(f"Connection with message {responseMessage[:10]} and time {time.time() - start_time}")
+            #print(f"MITM -> Client {responseMessage}")
             clientSend(ClientSocket,responseMessage)
 
         try:
@@ -38,7 +38,7 @@ def ClientThread(forwardQueue:queue.Queue(),backQueue:queue.Queue(),ClientSocket
                 #forwardQueue.clear()
                 start_time = time.time()
                 forwardQueue.put(message)
-                print(f"Client -> MITM {message}")
+                #print(f"Client -> MITM {message[:10]}")
         except Exception:
             continue
     
