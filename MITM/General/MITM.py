@@ -15,11 +15,11 @@ def main(argv):
     # Terminal line inputs
     mitmPort        = argv[argv.index("-p")+1] if "-p" in argv else 4000
     serverIpAddress = argv[argv.index("-s")+1] if "-i" in argv else "127.0.0.1"
-    serverPort      = argv[argv.index("-q")+1] if "-p" in argv else 3000
+    serverPort      = argv[argv.index("-q")+1] if "-q" in argv else 3000
     try:
 
         threadsStarted = []  
-        clientSocket = createSocket(port=mitmPort)
+        clientSocket = createSocket(port=int(mitmPort))
 
         while True:
             
@@ -30,7 +30,7 @@ def main(argv):
             print("Client connected")
 
             bankSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            bankSocket.connect((serverIpAddress, serverPort))
+            bankSocket.connect((serverIpAddress, int(serverPort)))
 
             forwardQueue = queue.Queue()
             backQueue = queue.Queue()

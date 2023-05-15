@@ -1,0 +1,30 @@
+{
+    "type": "correctness",
+    "target_team": 8,
+    "problem": "The only ports that the mbec can connect to is 3000 and 5000",
+    "inputs": [
+        {"input":["-u", "5000.user", "-a", "5000", "-n", "1000.00", "-p", "4000" ]}
+    ]
+}
+
+{
+    "type": "integrity",
+    "target_team": 8,
+    "problem": "The account number and the Public key are never associated, which allows for a personification attack, so using a brute force attack
+    we can determine a account number and change is balance",
+    "inputs": [
+        {"input":[ "-a", "50", "-n", "100.00"]},
+        {"input":[ "-a", "50", "-g"]}
+    ]
+}
+
+{
+    "type": "confidentiality",
+    "target_team": 8,
+    "problem": "There is no encription between the store and the mbec, so we if we have the MITM running in the port 5000",
+    "inputs": [
+        {"input":["-u", "5000.user", "-a", "5000", "-n", "1000.00" ]},
+        {"input":["-u", "5000.user", "-a", "5000", "-c", "100.00"]},
+        {"input":["-a", "5000", "-u", "5000.user", "-m", "10.00", "-v", "5000_0.card"]}
+    ]
+}

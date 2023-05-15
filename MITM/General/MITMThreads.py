@@ -8,7 +8,7 @@ def BankThread(forwardQueue:queue.Queue(),backQueue:queue.Queue(),BankSocket:soc
 
         if not forwardQueue.empty():
             message = forwardQueue.get()
-            #print(f"MITM -> Bank {message[:10]}")
+            print(f"MITM -> Bank {message}")
             bankSend(BankSocket,message)
     
         try:
