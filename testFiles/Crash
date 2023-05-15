@@ -1,7 +1,7 @@
 {
     "type": "correctness",
     "target_team": 1,
-    "problem": "if we suse the same card twice the store shuts down",
+    "problem": "if we use the same card twice the store shuts down",
     "inputs": [
         {"input":["-u", "5000.user", "-a", "5000", "-n", "1000.00" ]},
         {"input":["-u", "5000.user", "-a", "5000", "-c", "100.00"]},
