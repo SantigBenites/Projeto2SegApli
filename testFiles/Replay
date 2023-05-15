@@ -1,0 +1,10 @@
+{
+    "type": "integrity",
+    "target_team": 1,
+    "problem": "with MITMReplay.py working on port 4000, we reuse packets sent by the client (within a certain time interval) to be change the value of an account",
+    "inputs": [
+        {"input":["-u", "5000.user", "-a", "5000", "-n", "100.00", "-p", "4000"]},
+        {"input":["-u", "5000.user", "-a", "5000", "-d", "123.00", "-p", "4000"]},
+        {"input":["-u", "5000.user", "-a", "5000", "-g"]}
+    ]
+}
